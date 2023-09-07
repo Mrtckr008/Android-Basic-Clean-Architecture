@@ -13,16 +13,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getAllPersonDataUseCase: GetAllPersonDataUseCase,
-    application: Application
+    private val getAllPersonDataUseCase: GetAllPersonDataUseCase, application: Application
 ) : AndroidViewModel(application) {
 
-    private var nextValue:String? = null
+    private var nextValue: String? = null
     private val _noteListFromDatabase = MutableLiveData<ProcessResult>()
     val noteListFromDatabase: MutableLiveData<ProcessResult>
         get() = _noteListFromDatabase
 
-    fun getAllPersonData() {
+    fun getAllPersonData(refreshList: Boolean = false) {
+        if (refreshList) {
+            nextValue = null
+        }
         viewModelScope.launch(Dispatchers.IO) {
             val result = getAllPersonDataUseCase.invoke(nextValue)
             result.collect {

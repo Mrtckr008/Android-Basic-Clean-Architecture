@@ -9,16 +9,16 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-private const val WAIT_TIME = 0.1
-
-class PersonDataSourceImpl @Inject constructor() : PersonDataSource {
+class PersonDataSourceImpl @Inject constructor(private val dataSource: DataSource) :
+    PersonDataSource {
     override suspend fun getAllPersonData(next: String?): Flow<ProcessResult> = flow {
-        val dataSource = DataSource()
         val response = suspendCoroutine<ProcessResult?> { continuation ->
             dataSource.fetch(next) { response, error ->
                 continuation.resume(
                     ProcessResult(
-                        fetchResponse = response, fetchError = null, waitTime = WAIT_TIME
+                        fetchResponse = response,
+                        fetchError = error,
+                        waitTime = INITIAL_DELAY_MILLIS.toDouble()
                     )
                 )
             }
@@ -28,9 +28,12 @@ class PersonDataSourceImpl @Inject constructor() : PersonDataSource {
             ProcessResult(
                 fetchResponse = response?.fetchResponse,
                 fetchError = response?.fetchError,
-                waitTime = WAIT_TIME
+                waitTime = INITIAL_DELAY_MILLIS.toDouble()
             )
         )
     }.flowOn(Dispatchers.IO)
-}
 
+    companion object {
+        const val INITIAL_DELAY_MILLIS = 5000L
+    }
+}

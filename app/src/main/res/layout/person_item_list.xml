@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@{personData.fullName}"
+            android:text='@{personData.fullName + " (" + String.valueOf(personData.id) + ")"}'
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

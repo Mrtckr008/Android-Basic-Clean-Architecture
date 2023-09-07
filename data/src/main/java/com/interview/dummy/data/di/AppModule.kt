@@ -1,5 +1,7 @@
 package com.interview.dummy.data.di
 
+import android.provider.ContactsContract.Data
+import com.interview.dummy.data.datasource.DataSource
 import com.interview.dummy.data.datasource.PersonDataSource
 import com.interview.dummy.data.datasource.PersonDataSourceImpl
 import com.interview.dummy.data.repository.PersonRepositoryImpl
@@ -12,9 +14,13 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
-    fun providePersonDataSource(): PersonDataSource {
-        return PersonDataSourceImpl()
+    fun provideDataSource(): DataSource = DataSource()
+
+    @Provides
+    fun providePersonDataSource(dataSource: DataSource): PersonDataSource {
+        return PersonDataSourceImpl(dataSource)
     }
 
     @Provides
