@@ -26,7 +26,7 @@ class PersonDataSourceImpl @Inject constructor() : PersonDataSource {
         }
 
         if (response != null) {
-            emit(ProcessResult(fetchResponse = null, fetchError = null, 2.0))
+            emit(ProcessResult(fetchResponse = response.fetchResponse, fetchError = null, 2.0))
         }
     }.flowOn(Dispatchers.IO)
 }

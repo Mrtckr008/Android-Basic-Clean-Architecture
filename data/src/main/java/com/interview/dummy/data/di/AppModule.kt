@@ -1,4 +1,4 @@
-package com.interview.dummy.di
+package com.interview.dummy.data.di
 
 import com.interview.dummy.data.datasource.PersonDataSource
 import com.interview.dummy.data.datasource.PersonDataSourceImpl

@@ -33,21 +33,15 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.getAllPersonData().observe(viewLifecycleOwner) { processResult ->
-            if (processResult.fetchError != null) {
-                //TODO: Error message
-                println("mcmc error -> " + processResult.fetchError?.errorDescription)
-            } else if (processResult.fetchResponse != null) {
-                processResult.fetchResponse?.people?.let { personList ->
-                    setupUI(personList)
-                }
-            }
+        viewModel.noteListFromDatabase.observe(viewLifecycleOwner) {
+            it.fetchResponse?.people?.let { it1 -> setupUI(personList = it1) }
         }
+        viewModel.getAllPersonData()
     }
 
     private fun setupUI(personList: List<Person>) {
         val personAdapter = PersonAdapter()
+
         binding.personListRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = personAdapter
