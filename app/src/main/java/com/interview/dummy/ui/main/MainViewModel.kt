@@ -17,14 +17,16 @@ class MainViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
+    private var nextValue:String? = null
     private val _noteListFromDatabase = MutableLiveData<ProcessResult>()
     val noteListFromDatabase: MutableLiveData<ProcessResult>
         get() = _noteListFromDatabase
 
     fun getAllPersonData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = getAllPersonDataUseCase.invoke()
+            val result = getAllPersonDataUseCase.invoke(nextValue)
             result.collect {
+                nextValue = it.fetchResponse?.next
                 _noteListFromDatabase.postValue(it)
             }
         }

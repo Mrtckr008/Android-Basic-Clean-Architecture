@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllPersonDataUseCase @Inject constructor(private val repository: PersonRepository) {
-    suspend operator fun invoke(): Flow<ProcessResult> {
-        return repository.getAllPersonData()
+    suspend operator fun invoke(next: String?): Flow<ProcessResult> {
+        return repository.getAllPersonData(next)
     }
 }

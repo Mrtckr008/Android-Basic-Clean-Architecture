@@ -9,24 +9,28 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+private const val WAIT_TIME = 0.1
+
 class PersonDataSourceImpl @Inject constructor() : PersonDataSource {
-    override suspend fun getAllPersonData(): Flow<ProcessResult> = flow {
+    override suspend fun getAllPersonData(next: String?): Flow<ProcessResult> = flow {
         val dataSource = DataSource()
-        val nextPageIdentifier = "1"
         val response = suspendCoroutine<ProcessResult?> { continuation ->
-            dataSource.fetch(nextPageIdentifier) { response, error ->
+            dataSource.fetch(next) { response, error ->
                 continuation.resume(
                     ProcessResult(
-                        fetchResponse = response,
-                        fetchError = null,
-                        waitTime = 1.0
+                        fetchResponse = response, fetchError = null, waitTime = WAIT_TIME
                     )
                 )
             }
         }
 
-        if (response != null) {
-            emit(ProcessResult(fetchResponse = response.fetchResponse, fetchError = null, 2.0))
-        }
+        emit(
+            ProcessResult(
+                fetchResponse = response?.fetchResponse,
+                fetchError = response?.fetchError,
+                waitTime = WAIT_TIME
+            )
+        )
     }.flowOn(Dispatchers.IO)
 }
+

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.interview.dummy.databinding.FragmentMainBinding
-import com.interview.dummy.domain.entity.Person
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,8 +19,7 @@ class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -33,19 +32,45 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.noteListFromDatabase.observe(viewLifecycleOwner) {
-            it.fetchResponse?.people?.let { it1 -> setupUI(personList = it1) }
-        }
-        viewModel.getAllPersonData()
-    }
 
-    private fun setupUI(personList: List<Person>) {
         val personAdapter = PersonAdapter()
+        var isLoading = false
 
-        binding.personListRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = personAdapter
+        binding.personListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.personListRecyclerView.adapter = personAdapter
+
+        viewModel.noteListFromDatabase.observe(viewLifecycleOwner) {
+            it.fetchResponse?.people?.let { newPersonList ->
+                if (isLoading) {
+                    val currentList = personAdapter.currentList.toMutableList()
+                    currentList.addAll(newPersonList)
+                    val filteredList = currentList.distinctBy { person ->
+                        person.id
+                    }
+                    personAdapter.submitList(filteredList)
+                    isLoading = false
+                } else {
+                    personAdapter.submitList(newPersonList)
+                }
+            }
         }
-        personAdapter.submitList(personList)
+
+        viewModel.getAllPersonData()
+
+        binding.personListRecyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastVisibleItemPosition =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                val totalItemCount = personAdapter.itemCount
+
+                if (lastVisibleItemPosition == totalItemCount - 1 && !isLoading) {
+                    isLoading = true
+                    viewModel.getAllPersonData()
+                }
+            }
+        })
     }
 }

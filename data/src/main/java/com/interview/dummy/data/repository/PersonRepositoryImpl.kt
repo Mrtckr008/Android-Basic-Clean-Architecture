@@ -11,7 +11,7 @@ import javax.inject.Inject
 class PersonRepositoryImpl @Inject constructor(private val dataSource: PersonDataSource) :
     PersonRepository {
 
-    override suspend fun getAllPersonData(): Flow<ProcessResult> = flow {
-        emit(dataSource.getAllPersonData().single())
+    override suspend fun getAllPersonData(next: String?): Flow<ProcessResult> = flow {
+        emit(dataSource.getAllPersonData(next).single())
     }
 }
