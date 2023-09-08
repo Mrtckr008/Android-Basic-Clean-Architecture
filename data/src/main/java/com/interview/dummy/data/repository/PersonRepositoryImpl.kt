@@ -15,15 +15,15 @@ private const val MAX_RETRIES = 3
 class PersonRepositoryImpl @Inject constructor(private val dataSource: PersonDataSource) :
     PersonRepository {
 
-    private var retryCounter = 0
-
     override suspend fun getAllPersonData(next: String?): Flow<ProcessResult> = flow {
+        var retryCounter = 0
         val personData = dataSource.getAllPersonData(next).single()
         emit(personData)
         while (personData.fetchError != null && retryCounter < MAX_RETRIES) {
             val retryRequestData = dataSource.getAllPersonData(next).single()
             if (retryRequestData.fetchError == null) {
                 emit(retryRequestData)
+                break
             }
             retryCounter++
             delay(PersonDataSourceImpl.INITIAL_DELAY_MILLIS)

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,15 +44,24 @@ class MainFragment : Fragment() {
                 swipeRefreshLayout.isRefreshing = false
                 progressBar.isVisible = false
             }
-
+            isLoading = false
             when (val response = result.fetchResponse) {
                 null -> {
-                    binding.informationText.apply {
-                        text = result.fetchError?.errorDescription
-                            ?: getString(R.string.unknown_error_message)
-                        isVisible = true
+                    if (personAdapter.currentList.isEmpty()) {
+                        binding.informationText.apply {
+                            text = result.fetchError?.errorDescription
+                                ?: getString(R.string.unknown_error_message)
+                            isVisible = true
+                        }
+                    } else {
+                        val toast = Toast.makeText(
+                            this.requireContext(),
+                            result.fetchError?.errorDescription
+                                ?: getString(R.string.unknown_error_message),
+                            Toast.LENGTH_LONG
+                        )
+                        toast.show()
                     }
-                    personAdapter.submitList(emptyList())
                 }
 
                 else -> {
@@ -93,21 +103,17 @@ class MainFragment : Fragment() {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
+            personAdapter.submitList(emptyList())
             viewModel.getAllPersonData()
         }
     }
 
     private fun setPersonList(newPersonList: List<Person>) {
-        val updatedList = if (isLoading) {
-            val currentList = personAdapter.currentList.toMutableList()
-            currentList.addAll(newPersonList)
-            currentList.distinctBy { it.id }
-        } else {
-            newPersonList
-        }
-
-        personAdapter.submitList(updatedList)
-        isLoading = false
+        val currentList = personAdapter.currentList.toMutableList()
+        currentList.addAll(newPersonList)
+        personAdapter.submitList(currentList.distinctBy {
+            it.id
+        })
     }
 
     override fun onDestroyView() {

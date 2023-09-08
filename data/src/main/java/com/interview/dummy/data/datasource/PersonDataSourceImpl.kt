@@ -34,6 +34,6 @@ class PersonDataSourceImpl @Inject constructor(private val dataSource: DataSourc
     }.flowOn(Dispatchers.IO)
 
     companion object {
-        const val INITIAL_DELAY_MILLIS = 5000L
+        const val INITIAL_DELAY_MILLIS = 1000L
     }
 }
