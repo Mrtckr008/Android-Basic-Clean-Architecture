@@ -1,6 +1,5 @@
 package com.interview.dummy.data.di
 
-import android.provider.ContactsContract.Data
 import com.interview.dummy.data.datasource.DataSource
 import com.interview.dummy.data.datasource.PersonDataSource
 import com.interview.dummy.data.datasource.PersonDataSourceImpl

@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+
         <variable
             name="personData"
             type="com.interview.dummy.domain.entity.Person" />
@@ -13,10 +14,10 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/person_item_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="@dimen/person_item_title_padding"
             android:text='@{personData.fullName + " (" + String.valueOf(personData.id) + ")"}'
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"

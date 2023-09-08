@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.interview.dummy.databinding.PersonItemListBinding
 import com.interview.dummy.domain.entity.Person
 
-class PersonAdapter : ListAdapter<Person, PersonAdapter.ViewHolder>(YourItemDiffCallback()) {
+class PersonAdapter : ListAdapter<Person, PersonAdapter.ViewHolder>(PersonItemDiffCallback()) {
 
     class ViewHolder(private val binding: PersonItemListBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,7 +31,7 @@ class PersonAdapter : ListAdapter<Person, PersonAdapter.ViewHolder>(YourItemDiff
     }
 }
 
-class YourItemDiffCallback : DiffUtil.ItemCallback<Person>() {
+class PersonItemDiffCallback : DiffUtil.ItemCallback<Person>() {
     override fun areItemsTheSame(oldItem: Person, newItem: Person): Boolean {
         return oldItem.id == newItem.id
     }

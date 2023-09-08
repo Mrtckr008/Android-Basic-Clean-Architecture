@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DummyScorp</string>
+    <string name="empty_list_message">No record</string>
+    <string name="unknown_error_message">Unknown error</string>
 </resources>
