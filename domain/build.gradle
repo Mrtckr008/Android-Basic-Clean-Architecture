@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.interview.dummy.domain'
+    namespace 'com.mrtckr.dummy.domain'
     compileSdk 33
 
     defaultConfig {

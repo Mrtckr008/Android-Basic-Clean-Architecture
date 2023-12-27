@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.interview.dummy.ui.main.MainFragment"
+        android:name="com.mrtckr.dummy.ui.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" />
 </navigation>

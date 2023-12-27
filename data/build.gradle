@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace 'com.interview.scorp.data'
+    namespace 'com.mrtckr.dummy.data'
     compileSdk 33
 
     defaultConfig {

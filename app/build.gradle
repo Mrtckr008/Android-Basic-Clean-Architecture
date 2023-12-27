@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.interview.dummy'
+    namespace 'com.mrtckr.dummy'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.interview.dummy"
+        applicationId "com.mrtckr.dummy"
         minSdk 24
         targetSdk 33
         versionCode 1
